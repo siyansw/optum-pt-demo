@@ -50,6 +50,27 @@ const AGENT_CONFIGS = {
       'https://www.pbmi.com/formulary-search'
     ],
     getGoal: (drugName) => `Search for formulary coverage of "${drugName}" in Medicare Part D and major PBMs. Return structured JSON with tier placements, prior authorization requirements, and coverage percentages.`
+  },
+  news: {
+    name: 'News Intelligence Agent',
+    urls: [
+      'https://www.google.com/search?q=GLP-1+agonist+news+FDA+clinical+trials&tbm=nws',
+      'https://www.medscape.com/',
+      'https://www.healio.com/news/endocrinology'
+    ],
+    getGoal: (drugName) => `Search for the latest 5 news headlines about GLP-1 receptor agonists, specifically related to "${drugName}" class, including FDA approvals, clinical trial results, guideline updates, or regulatory changes from the past 7 days.
+
+Return JSON in this EXACT format:
+{
+  "data": [
+    {
+      "headline": "exact headline text",
+      "source": "source name",
+      "date": "relative time like '2 days ago'",
+      "brief_summary": "one sentence summary"
+    }
+  ]
+}`
   }
 };
 
@@ -87,6 +108,16 @@ const SIMULATED_RESULTS = {
       { name: 'Express Scripts', tier: 2, coverage: '92%' }
     ],
     count: 12
+  },
+  news: {
+    headlines: [
+      { headline: 'FDA approves expanded indication for GLP-1 in cardiovascular risk reduction', source: 'FDA News', date: '3 hours ago', summary: 'New labeling update for semaglutide' },
+      { headline: 'ADA releases updated treatment guidelines favoring GLP-1 therapies', source: 'American Diabetes Association', date: '6 hours ago', summary: 'Class I recommendation for CV benefit' },
+      { headline: 'Medicare expands coverage for GLP-1 medications in obesity treatment', source: 'CMS', date: '1 day ago', summary: 'Part D now covers weight loss indication' },
+      { headline: 'New trial data shows superior efficacy of dual GLP-1/GIP agonists', source: 'NEJM', date: '2 days ago', summary: 'Tirzepatide demonstrates greater HbA1c reduction' },
+      { headline: 'Supply chain improvements expected for GLP-1 medications in Q2', source: 'Medscape', date: '3 days ago', summary: 'Manufacturing capacity expanded' }
+    ],
+    count: 5
   }
 };
 

@@ -13,7 +13,8 @@ import {
   Loader2,
   ChevronDown,
   ChevronUp,
-  Video
+  Video,
+  Newspaper
 } from 'lucide-react';
 import tinyfishApi, { runMultipleAgents } from '../services/tinyfishApi';
 import StreamViewer from './StreamViewer';
@@ -26,7 +27,8 @@ const AGENT_ICONS = {
   guidelines: FileText,
   safety: AlertTriangle,
   comparator: Users,
-  formulary: Search
+  formulary: Search,
+  news: Newspaper
 };
 
 const initialAgents = [
@@ -74,10 +76,19 @@ const initialAgents = [
     progress: 100,
     result: '12 plans surveyed',
     details: 'Medicare Part D, major PBM formularies analyzed'
+  },
+  {
+    id: 'news',
+    name: 'News Intelligence',
+    icon: Newspaper,
+    status: 'complete',
+    progress: 100,
+    result: '5 headlines gathered',
+    details: 'GLP-1 clinical & regulatory news from past 7 days'
   }
 ];
 
-const AgentPanel = ({ onRefresh, drugName = 'GLP-1 agonists' }) => {
+const AgentPanel = ({ onRefresh, drugName = 'GLP-1 agonists', onNewsUpdate }) => {
   const [agents, setAgents] = useState(initialAgents);
   const [isRunning, setIsRunning] = useState(false);
   const [executionTime, setExecutionTime] = useState(47);
@@ -111,7 +122,7 @@ const AgentPanel = ({ onRefresh, drugName = 'GLP-1 agonists' }) => {
     addLog(`Starting agent execution for ${drugName}...`);
 
     // Run TinyFish agents
-    const agentTypes = ['evidence', 'guidelines', 'comparator', 'safety', 'formulary'];
+    const agentTypes = ['evidence', 'guidelines', 'comparator', 'safety', 'formulary', 'news'];
 
     await runMultipleAgents(agentTypes, drugName, {
       onAgentProgress: (agentType, progress) => {
@@ -150,6 +161,12 @@ const AgentPanel = ({ onRefresh, drugName = 'GLP-1 agonists' }) => {
         ));
 
         addLog(`✓ ${getAgentName(agentType)}: Completed successfully`);
+
+        // Handle news agent completion - update dashboard
+        if (agentType === 'news' && result.data && onNewsUpdate) {
+          console.log('📰 News agent completed with data:', result.data);
+          onNewsUpdate(result.data);
+        }
 
         // Update stats
         if (result.data) {
@@ -203,6 +220,8 @@ const AgentPanel = ({ onRefresh, drugName = 'GLP-1 agonists' }) => {
         return `${data.alerts?.length || 0} active alerts`;
       case 'formulary':
         return `${data.plans?.length || data.count || 12} plans surveyed`;
+      case 'news':
+        return `${data.headlines?.length || data.count || 5} headlines gathered`;
       default:
         return 'Completed';
     }

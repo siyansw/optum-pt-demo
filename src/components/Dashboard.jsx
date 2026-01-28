@@ -32,6 +32,57 @@ import './Dashboard.css';
 const Dashboard = ({ onNavigate, onBack }) => {
   const [showAgentPanel, setShowAgentPanel] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [newsHeadlines, setNewsHeadlines] = useState([
+    { headline: 'FDA approves new GLP-1 indication for chronic weight management', time: '3 hours ago', type: 'info' },
+    { headline: 'ADA updates guidelines to recommend GLP-1s for CV risk reduction', time: '6 hours ago', type: 'info' },
+    { headline: 'Medicare coverage expansion for GLP-1 medications announced', time: '1 day ago', type: 'warning' }
+  ]);
+  const [newsIsLive, setNewsIsLive] = useState(false);
+
+  const handleNewsUpdate = (newsData) => {
+    console.log('📰 Dashboard received news update:', newsData);
+
+    if (!newsData) return;
+
+    // Handle different possible data structures from TinyFish API
+    let newsArray = [];
+
+    if (Array.isArray(newsData)) {
+      // Data is directly an array
+      newsArray = newsData;
+    } else if (newsData.data && Array.isArray(newsData.data)) {
+      // Data has data property (TinyFish format with count/status)
+      newsArray = newsData.data;
+    } else if (newsData.news_articles && Array.isArray(newsData.news_articles)) {
+      // Data has news_articles property
+      newsArray = newsData.news_articles;
+    } else if (newsData.headlines && Array.isArray(newsData.headlines)) {
+      // Data has headlines property
+      newsArray = newsData.headlines;
+    } else if (newsData.results && Array.isArray(newsData.results)) {
+      // Data has results property
+      newsArray = newsData.results;
+    } else if (newsData.news && Array.isArray(newsData.news)) {
+      // Data has news property
+      newsArray = newsData.news;
+    } else {
+      console.warn('⚠️ Unexpected news data structure:', newsData);
+      return;
+    }
+
+    if (newsArray.length > 0) {
+      const formattedNews = newsArray.slice(0, 5).map(item => ({
+        headline: item.headline || item.title || item.brief_summary || item['brief summary'] || item.summary || 'News update',
+        time: item.date || item.time || item.timestamp || 'Recent',
+        type: (item.headline || item.title || '')?.toLowerCase().includes('fda') ? 'info' : 'warning',
+        source: item.source || item.publisher || 'TinyFish Agent'
+      }));
+
+      console.log('✓ Formatted news headlines:', formattedNews);
+      setNewsHeadlines(formattedNews);
+      setNewsIsLive(true);
+    }
+  };
 
   // Prepare scatter plot data
   const scatterData = drugList.map(id => {
@@ -121,7 +172,7 @@ const Dashboard = ({ onNavigate, onBack }) => {
               </div>
               <div className="stat-item">
                 <Bot size={16} />
-                <span className="stat-value">5</span>
+                <span className="stat-value">6</span>
                 <span className="stat-label">Agents Active</span>
               </div>
               <div className="stat-item">
@@ -288,11 +339,46 @@ const Dashboard = ({ onNavigate, onBack }) => {
                 ))}
             </div>
           </div>
+
+          {/* Clinical News Intelligence */}
+          <div className="dashboard-card alert-card">
+            <div className="card-header-row">
+              <h2 className="card-title">
+                <AlertTriangle size={18} className="text-cyan" />
+                GLP-1 Clinical & Regulatory News
+                {newsIsLive ? (
+                  <span className="live-badge-inline">🔴 Live from TinyFish</span>
+                ) : (
+                  <span className="demo-badge-inline">Demo Data</span>
+                )}
+              </h2>
+              <span className="card-subtitle">
+                {newsIsLive ? 'Latest updates gathered by News Intelligence Agent' : 'Click "Run Agents" to fetch live news'}
+              </span>
+            </div>
+            <div className="alerts-list">
+              {newsHeadlines.map((news, idx) => (
+                <div key={idx} className="alert-item">
+                  <div className={`alert-dot ${news.type}`}></div>
+                  <div className="alert-content">
+                    <span className="alert-text">{news.headline}</span>
+                    <div className="alert-meta">
+                      <span className="alert-time">{news.time}</span>
+                      {news.source && <span className="alert-source"> • {news.source}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
 
         {/* Agent Panel */}
         {showAgentPanel && (
-          <AgentPanel onRefresh={() => setLastUpdated(new Date())} />
+          <AgentPanel
+            onRefresh={() => setLastUpdated(new Date())}
+            onNewsUpdate={handleNewsUpdate}
+          />
         )}
       </div>
     </motion.div>
