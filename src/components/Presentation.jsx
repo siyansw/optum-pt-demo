@@ -68,7 +68,7 @@ const Presentation = ({ currentSlide, setCurrentSlide, onNavigate }) => {
             <span>TinyFish</span>
           </div>
           <span className="header-divider">|</span>
-          <span className="header-title">Optum Rx P&T Committee</span>
+          <span className="header-title">P&T Committee</span>
         </div>
         <div className="header-right">
           <span className="slide-indicator">

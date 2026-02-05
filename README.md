@@ -1,10 +1,10 @@
-# Optum Rx P&T Committee Demo - TinyFish Integration
+# P&T Committee Demo - TinyFish Integration
 
 Interactive demonstration app showcasing TinyFish AI-powered clinical evidence gathering for P&T Committee workflows.
 
 ## Features
 
-- **Password-Protected Access**: Secure entry with `optum2026` or `tinyfish2026`
+- **Password-Protected Access**: Secure entry with `demo2026` or `tinyfish2026`
 - **3 Presentation Slides**: Problem → Solution → Live Demo
 - **Interactive Dashboard**:
   - GLP-1 agonist class comparison
@@ -187,7 +187,7 @@ src/
 ## Usage
 
 1. **Start the app**: Open `http://localhost:5173`
-2. **Enter password**: `optum2026` or `tinyfish2026`
+2. **Enter password**: `demo2026` or `tinyfish2026`
 3. **Navigate slides**: Use arrow buttons or slide indicators
 4. **Launch dashboard**: Click "Go to Dashboard" on Slide 3
 5. **Run agents**: Click "Run Agents" in the Agent Panel
@@ -222,4 +222,4 @@ npm run preview
 
 ## License
 
-Proprietary - Optum Rx Demo Application
+Proprietary - P&T Committee Demo Application

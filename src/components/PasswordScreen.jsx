@@ -9,7 +9,7 @@ const PasswordScreen = ({ onAuthenticate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === 'optum2026' || password === 'tinyfish2026') {
+    if (password === 'demo2026' || password === 'tinyfish2026') {
       onAuthenticate();
     } else {
       setError(true);
@@ -30,7 +30,7 @@ const PasswordScreen = ({ onAuthenticate }) => {
         </div>
 
         <h1 className="password-title">
-          Optum Rx <span className="text-cyan">× TinyFish</span>
+          P&T Committee <span className="text-cyan">× TinyFish</span>
         </h1>
 
         <p className="password-subtitle">Enter password to continue</p>
