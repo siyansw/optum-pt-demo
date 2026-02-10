@@ -40,10 +40,10 @@ Create a `.env` file in the root directory:
 ```env
 # TinyFish API Configuration
 VITE_TINYFISH_API_KEY=your_api_key_here
-VITE_TINYFISH_API_URL=https://mino.ai/v1/automation/run-sse
+VITE_TINYFISH_API_URL=https://agent.tinyfish.ai/v1/automation/run-sse
 
 # Mode: 'demo' for simulated data, 'live' for real API calls
-VITE_MODE=demo
+VITE_MODE=live
 ```
 
 ### Modes
@@ -217,7 +217,7 @@ npm run preview
 ## Support
 
 - **TinyFish Docs**: https://docs.mino.ai/
-- **TinyFish API**: https://mino.ai/v1/automation/run-sse
+- **TinyFish API**: https://agent.tinyfish.ai/v1/automation/run-sse
 - **Get API Key**: https://app.mino.ai/signup
 
 ## License
